@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Warstar - Yolo's Escape
+        </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {
+                
+            }
+            #spelplan {
+                margin 0;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+            .behallare {
+                z-index: 0;
+                overflow: hidden;
+                position: absolute;
+                left: 0;
+                top: 0;
+                padding: 0;
+                margin 0;
+                width: 100vw;
+                height: 100vh;
+                background-image: url("https://upload.wikimedia.org/wikipedia/commons/0/04/Bildsensorrauschen.8000.Millisekunden.25.Grad.Celsius.png");
+            }
+            .figur {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 128px;
+                height: 128px;
+                position: fixed;
+                left: calc(50vw - 64px);
+                top: calc(50vh - 64px);
+            }
+            .dold {
+                display: none;
+            }
+            #overlay {
+                z-index: 3;
+            }
+            #pos {
+                color: white;
+                background-color: black;
+                z-index: 10;
+                position: fixed;
+                left: 0;
+                top: 0;
+            }
+            .faller {
+                animation: faller 5s;
+            }
+            @keyframes faller {
+                0% {
+                    transform: scale(1,1) rotateX(0deg) rotateZ(0deg);
+                }
+                100% {
+                    transform: scale(0,0) rotateX(360deg) rotateZ(174deg);
+                }
+            }
+            #meddelanderuta {
+                z-index: 2;
+                position: fixed;
+                bottom: 30px;
+                width: 90vw;
+                right: 5vw;
+                height: 100px;
+                background-color: white;
+                border-width: 1px;
+                border-style: solid;
+                border-color: black;
+                display: none;
+                font-family: 'Inconsolata', monospace;
+                font-size: 25px;
+            }
+            #skuggbehallare {
+                background-color: rgba(0, 0, 0, 0);
+                z-index: 1;
+                overflow: hidden;
+                position: absolute;
+                left: 0;
+                top: 0;
+                padding: 0;
+                margin 0;
+                width: 100vw;
+                height: 100vh;
+            }
+            #skugga {
+                background-color: rgba(0, 0, 0, 0);
+            }
+            #spela-varlden {
+                display: block;
+            }
+            #start {
+                text-align: center;
+                font-family: 'Alfa Slab One', cursive;
+                font-size: 10vw;
+                display: none;
+            }
+            #strid {
+                display: none;
+            }
+            .stridsida {
+                width: 30vh;
+                position: absolute;
+                top: calc((100vh - 100px) / 2 - 15vh);
+                height: 30vh;
+            }
+            #motstandare {
+                right: 30px;
+            }
+        </style>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@300&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap" rel="stylesheet">
+        <script src="resurser.js" ></script>
+    </head>
+    <body onresize="uppdateraBreddHojd()">
+        <div id="start">
+            WARSTAR: Yolo's Escape<br>
+            <button type="button" onclick="document.getElementById('spela-varlden').style.display = 'block'">Spela</button>
+        </div>
+        <div id="strid">
+            <img class="stridsida" src="https://media.discordapp.net/attachments/818403607841996870/838689249434796062/STA_STILL_HOGER.png">
+            <img class="stridsida" id="motstandare" src="https://www.publicdomainpictures.net/pictures/260000/nahled/loading-symbol.jpg">
+        </div>
+        <div id="spela-varlden">
+            <div class="behallare">
+                <canvas id="spelplan" width=10 height=10>
+                </canvas>
+            </div>
+            <div id="skuggbehallare">
+                <canvas id="skugga" width=10 height=10>
+                </canvas>
+            </div>
+            <div id="overlay">
+                <output id="pos"></output>
+                <img id="figur0" class="figur dold" src="https://media.discordapp.net/attachments/818403607841996870/838692234454630450/GA_BORT.gif">
+                <img id="figur1" class="figur dold" src="https://media.discordapp.net/attachments/818403607841996870/838692229870387220/GA_HOGER.gif">
+                <img id="figur2" class="figur" src="https://media.discordapp.net/attachments/818403607841996870/838692227437690890/GA_FRAM.gif">
+                <img id="figur3" class="figur dold" src="https://media.discordapp.net/attachments/818403607841996870/838692231921664000/GA_VANSTER.gif">
+            
+                <img id="figur0stilla" class="figur dold" src="https://media.discordapp.net/attachments/818403607841996870/838689254443450398/STA_BAKAT.png">
+                <img id="figur1stilla" class="figur dold" src="https://media.discordapp.net/attachments/818403607841996870/838689249434796062/STA_STILL_HOGER.png">
+                <img id="figur2stilla" class="figur dold" src="https://media.discordapp.net/attachments/818403607841996870/838689251864084490/STA_STILLFRAMAt.png">
+                <img id="figur3stilla" class="figur dold" src="https://media.discordapp.net/attachments/818403607841996870/838689240959025182/STA_VANSTER.png">
+            </div>
+        </div>
+        <div id="meddelanderuta">
+        </div>
+        <audio id="oof" src="https://orangefreesounds.com/wp-content/uploads/2018/11/Minecraft-death-sound.mp3?_=1"></audio>
+        <audio id="metall1" src="https://cdn.discordapp.com/attachments/818403607841996870/836520619859771422/Ihopsattning_av_tva_ljud_projekt_WAV.wav"></audio>
+        <audio id="metall2" src="https://cdn.discordapp.com/attachments/818403607841996870/836521296569303090/Ihopsattning_av_tre_ljud_projekt.wav"></audio>
+        <script src="skript.js"></script>
+        <script src="pokemonstrid.js"> </script>  
+    </body>
+</html>
