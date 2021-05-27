@@ -1,0 +1,458 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Warstar - Yolo's Escape
+        </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {
+                
+            }
+            #spelplan {
+                margin 0;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+            .behallare {
+                overflow: hidden;
+                position: absolute;
+                left: 0;
+                top: 0;
+                padding: 0;
+                margin 0;
+                width: 100vw;
+                height: 100vh;
+                background-image: url("https://upload.wikimedia.org/wikipedia/commons/0/04/Bildsensorrauschen.8000.Millisekunden.25.Grad.Celsius.png");
+            }
+            #figur {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 30px;
+                height: 60px;
+                position: fixed;
+                left: calc(50vw + 20px);
+                top: calc(50vh + 5px);
+            }
+            #overlay {
+                z-index: 3;
+            }
+            #pos {
+                color: white;
+                background-color: black;
+                position: fixed;
+                left: 0;
+                top: 0;
+            }
+            .faller {
+                animation: faller 5s;
+            }
+            @keyframes faller {
+                0% {
+                    transform: scale(1,1) rotateX(0deg) rotateZ(0deg);
+                }
+                100% {
+                    transform: scale(0,0) rotateX(360deg) rotateZ(174deg);
+                }
+            }
+            #meddelanderuta {
+                z-index: 1;
+                position: fixed;
+                bottom: 30px;
+                width: 90vw;
+                right: 5vw;
+                height: 100px;
+                background-color: white;
+                border-width: 1px;
+                border-style: solid;
+                border-color: black;
+                display: none;
+                font-family: 'Inconsolata', monospace;
+                font-size: 25px;
+            }
+        </style>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@300&display=swap" rel="stylesheet">
+    </head>
+    <body onresize="uppdateraBreddHojd()">
+        <div class="behallare">
+            <canvas id="spelplan" width=10 height=10>
+            </canvas>
+        </div>
+        <div id="overlay">
+            <output id="pos"></output>
+            <img id="figur" src="https://cdn.pixabay.com/photo/2019/05/08/07/45/dirty-person-4187951_1280.png">
+        </div>
+        <div id="meddelanderuta">
+        </div>
+        <audio id="oof" src="https://orangefreesounds.com/wp-content/uploads/2018/11/Minecraft-death-sound.mp3?_=1"></audio>
+        <audio id="metall1" src="https://cdn.discordapp.com/attachments/818403607841996870/836160056508678174/Inspelning_2_edited.wav"></audio>
+        <audio id="metall2" src="https://cdn.discordapp.com/attachments/818403607841996870/836161121966489610/Inspelning_2_version_2_edited.wav"></audio>
+        <audio id="metall3" src="https://cdn.discordapp.com/attachments/818403607841996870/836161758142005298/Inspelning_2_version_3_edited.wav"></audio>
+        <script>
+            let stodlinjer = false;
+            let irorelse = false;
+            let koordinater = false;
+            let ljudPa = true;
+            let meddelandeKo = [];
+            let meddelandeSkrivs = false;
+            
+            let story = false;
+            
+            let niva1 = [
+                [0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0],
+                [0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0],
+                [0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0],
+                [0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0],
+                [0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0],
+                [0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0],
+                [0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0],
+                [0, 2, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 2, 0],
+                [0, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 0],
+                [0, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 0],
+                [0, 2, 1, 1, 1, 1, 1, 2, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 2, 0],
+                [0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0],
+                [0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0],
+                [0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0],
+                [0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0],
+                [0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0],
+                [0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0],
+                [0, 2, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 2, 0],
+                [0, 2, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 2, 0],
+                [0, 2, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 2, 0],
+                [0, 2, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 2, 0],
+                [0, 2, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 2, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 8, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                ];
+            let niva2 = [
+                [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+                [2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2],
+                [2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2],
+                [2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2],
+                [2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2],
+                [2, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 2],
+                [2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2],
+                [2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2],
+                [2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2],
+                [2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2],
+                [2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2],
+                [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+                
+            ];
+            document.getElementById("metall1").volume = 0.3;
+            document.getElementById("metall2").volume = 0.3;
+            document.getElementById("metall3").volume = 0.3;
+            
+            let varlden = niva1;
+            
+            let mitten = [8,6];
+            let block = [8, 6];
+            let bredd;
+            let hojd;
+            let ruta = 70;
+            let rorelsepa = true;
+            let spelplan = document.getElementById("spelplan");
+            let vaggar = [2, 4, 6];
+            let interaktioner = [0, 1, 2, 3, 5, 4, 7, 6];
+            let hallerNere = [false, false, false, false];
+            let ljud = [
+                [],
+                ["metall1", "metall2", "metall3"],
+                [""],
+                [""],
+                [""],
+                [""],
+                [""],
+                [""]
+            ];
+            
+            /*
+            
+            0 - intet
+            1 - golv (metall)
+            2 - vägg
+            3 - hål (!)
+            4 - horisontell dörr (stängd)
+            5 - horisontell dörr (öppen)
+            6 - vertikal dörr (stängd) (!)
+            7 - vertikal dörr (öppen) (!)
+            8 - Edvins block
+            9 - Edvansoldat
+            */
+            
+            let golv = new Image;
+            golv.src = "https://lh3.googleusercontent.com/r6hcRC36CzWCl30MUbabHMUI_KT_yFarwA2bFmBMnvYJ4KpesmjTQvGM_-5rn64JbJYzQRf7N8rYrm0q_BE";
+            
+            let saknas = new Image; 
+            saknas.src = "https://media.forgecdn.net/avatars/thumbnails/44/335/120/120/636030690961068207.png";
+            
+            let intet = new Image;
+            intet.src = "https://en-programmerare.github.io/keminiraknaren/helttransparent.png";
+            
+            let vagg = new Image;
+            vagg.src = "https://image.flaticon.com/icons/png/128/698/698684.png";
+            
+            let dorrStangdHorisontell = new Image;
+            dorrStangdHorisontell.src = "https://iconarchive.com/download/i107955/google/noto-emoji-objects/62991-door.ico";
+            
+            let dorrOppenHorisontell = new Image;
+            dorrOppenHorisontell.src = "https://iconarchive.com/download/i33267/visualpharm/must-have/Log-Out.ico";
+            
+            let edvinsBlock = new Image();
+            edvinsBlock.src = "https://media.discordapp.net/attachments/818403607841996870/836170865741791232/floor_1.png"
+            
+            let edvan = new Image();
+            edvan.src = "https://media.discordapp.net/attachments/783677919541198848/836216840639348826/unknown.png?width=478&height=450";
+            
+            let p = spelplan.getContext("2d");
+            
+            
+            
+            edvan.onload = rita;
+            function uppdateraBreddHojd() {
+                bredd = window.innerWidth;
+                hojd = window.innerHeight;
+                spelplan.width = bredd;
+                spelplan.height = hojd;
+            }
+            document.onkeyup = function tangentUpp(handelse) {
+                if(handelse.key === "ArrowLeft")
+                    hallerNere[0] = false;
+                else if(handelse.key === "ArrowRight")
+                    hallerNere[1] = false;
+                else if(handelse.key === "ArrowUp")
+                    hallerNere[2] = false;
+                else if(handelse.key === "ArrowDown")
+                    hallerNere[3] = false;
+                irorelse = hallerNere.includes(true);
+            };
+            document.onkeydown = function tangentNer(handelse) {
+                if(handelse.key === "ArrowLeft")
+                    hallerNere[0] = true;
+                else if(handelse.key === "ArrowRight")
+                    hallerNere[1] = true;
+                else if(handelse.key === "ArrowUp")
+                    hallerNere[2] = true;
+                else if(handelse.key === "ArrowDown")
+                    hallerNere[3] = true;
+                irorelse = hallerNere.includes(true);
+                if(handelse.key === "1") {
+                    varlden = niva1;
+                    mitten = [8, 6];
+                    block = [8, 6];
+                    rita();
+                }
+                if(handelse.key === "2") {
+                    varlden = niva2;
+                    mitten = [1, 1];
+                    block = [1, 1];
+                    rita();
+                }
+                if(handelse.ctrlKey && handelse.key === "x") {
+                    let fuskkod = prompt("Ange kod");
+                    if(fuskkod === "godnatt")
+                        rorelsepa = false;
+                    if(fuskkod === "godmorgon")
+                        rorelsepa = true;
+                    if(fuskkod === "oof") {
+                        rorelsepa = false;
+                        document.getElementById("figur").classList.add("faller");
+                        document.getElementById("oof").play();
+                        setTimeout(function() {
+                            rorelsepa = true;
+                        }, 5000);
+                    }
+                    if(fuskkod === "jorge")
+                        alert("Du vann!\n\nGrattis till din vinst. Du fick 24834 poäng. Din placering i världstopplistan är 1:a.");
+                    if(fuskkod === "skrjtz")
+                        interaktioner = [1, 0, 5, 3, 5, 4, 7, 6];
+                    if(fuskkod === "skrjtz2")
+                        vaggar = [0, 5];
+                    if(fuskkod === "vilse")
+                        koordinater = true;
+                    if(fuskkod === "kastrull")
+                        ljudPa = ljudPa ? false : true;
+                    if(fuskkod === "högerextrem")
+                        hallerNere[1] = true;
+                    if(fuskkod === "vänsterextrem")
+                        hallerNere[0] = true;
+                    if(fuskkod === "snälla nån") {
+                        vaggar = [2, 4, 6];
+                        interaktioner = [0, 1, 2, 3, 5, 4, 7, 6];
+                        edvinsBlock.src = "https://media.discordapp.net/attachments/818403607841996870/836170865741791232/floor_1.png";
+                        rita();
+                    }
+                    if(fuskkod === "minecraft")
+                        edvinsBlock.src = "https://lh3.googleusercontent.com/r6hcRC36CzWCl30MUbabHMUI_KT_yFarwA2bFmBMnvYJ4KpesmjTQvGM_-5rn64JbJYzQRf7N8rYrm0q_BE";
+                    if(fuskkod.substr(0, 15) === "teknisk rapport")
+                        meddelanderuta(fuskkod.substring(16));
+                    if(fuskkod === "story!!!") {
+                        story = true;
+                        mitten = [8, 6];
+                        block = [8, 6];
+                        varlden[5][10] = 9;
+                        varlden[3][11] = 9;
+                        rita();
+                        meddelanderuta("Walk around the corner using ←↑→↓");
+                        let vantId;
+                        vantId = setInterval(function() {
+                            if(mitten[0] <= 6 && mitten[1] >= 7) {
+                                meddelanderuta("Oh no 2 edvans. <br><br> Press spacebar to fire weapon.");
+                                clearInterval(vantId);
+                            }
+                        }, 1000);
+                    }
+                    
+                }
+                if(handelse.key === "Enter")
+                    interagera();
+                if(handelse.key === " " && story && !meddelandeSkrivs) {
+                    document.getElementById("oof").play();
+                    varlden[5][10] = 1;
+                    varlden[3][11] = 1;
+                    rita();
+                    setTimeout(meddelanderuta, 2000, "Mer kommer sen.");
+                    story = false;
+                }
+                if(koordinater)
+                    document.getElementById("pos").innerHTML = "X: " + mitten[0] + "<br>Y: " + mitten[1];
+                
+            };
+            
+            setInterval(rorelse, 50);
+            setTimeout(ljudFranGolv, 2000);
+            function rorelse() {
+                let dx = 0;
+                let dy = 0;
+                if(hallerNere[0])
+                    dx -= 0.2;
+                if(hallerNere[1])
+                    dx += 0.2;
+                if(hallerNere[2])
+                    dy -= 0.2;
+                if(hallerNere[3])
+                    dy += 0.2;
+                if(!vaggar.includes(varlden[Math.round(mitten[0] + dx)][Math.round(mitten[1] + dy)]) && rorelsepa && varlden[0][Math.round(mitten[1] + dy)] !== undefined && !meddelandeSkrivs) {
+                    mitten[0] += dx;
+                    mitten[1] += dy;
+                    block[0] = Math.round(mitten[0]);
+                    block[1] = Math.round(mitten[1]);
+                    if(dx !== 0 || dy !== 0)
+                        rita();
+                }
+            }
+            
+            function ljudFranGolv() {
+                if(irorelse && ljudPa) {
+                    let material = varlden[block[0]][block[1]];   
+                    ljudalternativ = ljud[material];
+                    let slumpindex = Math.floor(ljudalternativ.length * Math.random());
+                    let ljudid = ljudalternativ[slumpindex];
+                    document.getElementById(ljudid).play();
+                    
+                }
+                setTimeout(ljudFranGolv, Math.random() * 1000);
+            }
+                
+            
+            function rita() {
+                uppdateraBreddHojd();
+                p.clearRect(0, 0, spelplan.width, spelplan.height);
+                let startX = mitten[0] - (bredd / ruta) / 2;
+                let startY = mitten[1] - (hojd / ruta) / 2;
+                for(let x = Math.floor(startX); varlden.length > x; x++) {
+                    for(let y = Math.floor(startY); varlden[0].length > y; y++) {
+                        if(x >= 0 && y >= 0) {
+                            let bild;
+                            switch(varlden[x][y]) {
+                                case 0:
+                                    bild = intet;
+                                    break;
+                                case 8:
+                                    bild = golv;
+                                    break;
+                                case 2:
+                                    bild = vagg;
+                                    break;
+                                case 3:
+                                    bild = saknas;
+                                    break;
+                                case 4:
+                                    bild = dorrStangdHorisontell;
+                                    p.drawImage(golv, (x - startX) * ruta, (y - startY) * ruta, ruta, ruta);
+                                    break;
+                                case 5:
+                                    bild = dorrOppenHorisontell;
+                                    p.drawImage(golv, (x - startX) * ruta, (y - startY) * ruta, ruta, ruta);
+                                    break;
+                                case 1:
+                                    bild = edvinsBlock;
+                                    break;
+                                case 9:
+                                    bild = edvan;
+                                    break;
+                                default:
+                                    bild = saknas;
+                            }
+                            p.drawImage(bild, (x - startX) * ruta, (y - startY) * ruta, ruta, ruta);
+                                
+                        }
+                        
+                    }
+                }
+                //p.stroke();
+                if(varlden[block[0]][block[1]] === 0) {
+                    rorelsepa = false;
+                    document.getElementById("figur").classList.add("faller");
+                    document.getElementById("oof").play();
+                    setTimeout(dog, 5000);
+                }
+            }
+            
+            function dog() {
+                window.location.reload();
+            }
+            
+            function interagera() {
+                varlden[block[0] - 1][block[1]] = interaktioner[varlden[block[0] - 1][block[1]]];
+                varlden[block[0] + 1][block[1]] = interaktioner[varlden[block[0] + 1][block[1]]];
+                varlden[block[0]][block[1] - 1] = interaktioner[varlden[block[0]][block[1] - 1]];
+                varlden[block[0]][block[1] + 1] = interaktioner[varlden[block[0]][block[1] + 1]];
+                rita();
+            }
+            
+            function meddelanderuta(meddelande) {
+                if(meddelandeSkrivs) {
+                    setTimeout(meddelanderuta, 1000, meddelande);
+                    return;
+                }
+                if(meddelande.length < 30)
+                    document.getElementById("meddelanderuta").style.lineHeight = "100px";
+                else
+                    document.getElementById("meddelanderuta").style.lineHeight = "initial";
+                meddelande = meddelande.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/nyrad/g, "<br>");
+                document.getElementById("meddelanderuta").style.display = "block";
+                document.getElementById("meddelanderuta").innerHTML = "";
+                skrivmaskin(meddelande, 0);
+               
+            }
+            function skrivmaskin(meddelande, gang) {
+                meddelandeSkrivs = true;
+                document.getElementById("meddelanderuta").innerHTML += meddelande.charAt(gang);
+                if(gang <= meddelande.length) 
+                    setTimeout(skrivmaskin, 100, meddelande, gang + 1);
+                else
+                    setTimeout(function() {
+                        document.getElementById("meddelanderuta").style.display = "none";
+                        meddelandeSkrivs = false;
+                    }, 3000);
+            }
+        </script>
+    </body>
+</html>
