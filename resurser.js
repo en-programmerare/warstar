@@ -3,7 +3,7 @@ let resurser = {
     {
       id: 0,
       namn: "Intet",
-      textur: "https://en-programmerare.github.io/keminiraknaren/helttransparent.png",
+      textur: "https://en-programmerare.github.io/warstar/media/helttransparent.png",
       vagg: false,
       gangljud: [],
       interaktion: {
@@ -14,11 +14,11 @@ let resurser = {
     {
       id: 1,
       namn: "Golv",
-      textur: "https://media.discordapp.net/attachments/818403607841996870/836170865741791232/floor_1.png",
+      textur: "https://en-programmerare.github.io/warstar/media/floor_1.webp",
       vagg: false,
       gangljud: [
-        "https://cdn.discordapp.com/attachments/818403607841996870/836520619859771422/Ihopsattning_av_tva_ljud_projekt_WAV.wav",
-        "https://cdn.discordapp.com/attachments/818403607841996870/836521296569303090/Ihopsattning_av_tre_ljud_projekt.wav"
+        "media/Ihopsattning_av_tva_ljud_projekt_WAV.wav",
+        "media/Ihopsattning_av_tre_ljud_projekt.wav"
       ],
       interaktion: {
         typ: "ingen",
@@ -52,7 +52,7 @@ let resurser = {
     {
       id: 4,
       namn: "Stängd horisontell dörr",
-      textur: "https://media.discordapp.net/attachments/818403607841996870/836291672043159562/Metalldorr_ratt_pixlar.png",
+      textur: "https://en-programmerare.github.io/warstar/media/Metalldorr_ratt_pixlar.png",
       vagg: true,
       gangljud: [],
       interaktion: {
@@ -63,7 +63,7 @@ let resurser = {
     {
       id: 5,
       namn: "Öppen horisontell dörr",
-      textur: "https://media.discordapp.net/attachments/818403607841996870/837423527287324692/Metalldorr_oppen_ratt_pixlar.png",
+      textur: "https://en-programmerare.github.io/warstar/media/Metalldorr_oppen_ratt_pixlar.png",
       vagg: false,
       gangljud: [],
       interaktion: {
@@ -107,7 +107,7 @@ let resurser = {
     {
       id: 9,
       namn: "Testgolv",
-      textur: "https://media.discordapp.net/attachments/818403607841996870/836280107794300928/Metallgolv_forslag.png",
+      textur: "https://en-programmerare.github.io/warstar/media/Metallgolv_forslag.png",
       vagg: false,
       gangljud: [],
       interaktion: {
@@ -126,16 +126,16 @@ let resurser = {
           attacker: ["Fist fight", "Light saber", "Gun"],
           texturer: {
               rorelse: [
-                 "https://media.discordapp.net/attachments/818403607841996870/840121614040694784/STA_STILL_FRAM_EDVAN.png",
-                  "https://media.discordapp.net/attachments/818403607841996870/840127898751991848/STA_VANSTER_EDVAN.png",
-                  "https://en-programmerare.github.io/keminiraknaren/pixil-frame-0%20(3).png",
-                  "https://en-programmerare.github.io/keminiraknaren/STA_HOGER_EDVAN.webp"
+                 "https://en-programmerare.github.io/warstar/media/STA_STILL_FRAM_EDVAN.webp",
+                  "https://en-programmerare.github.io/warstar/media/STA_VANSTER_EDVAN.png",
+                  "https://en-programmerare.github.io/warstar/media/pixil-frame-0%20(3).png",
+                  "https://en-programmerare.github.io/warstar/media/STA_HOGER_EDVAN.webp"
                   ],
               stilla: [
- "https://media.discordapp.net/attachments/818403607841996870/840121614040694784/STA_STILL_FRAM_EDVAN.png",
-                  "https://media.discordapp.net/attachments/818403607841996870/840127898751991848/STA_VANSTER_EDVAN.png",
-                  "https://en-programmerare.github.io/keminiraknaren/pixil-frame-0%20(3).png",
-                  "https://en-programmerare.github.io/keminiraknaren/STA_HOGER_EDVAN.webp"
+                  "https://en-programmerare.github.io/warstar/media/STA_STILL_FRAM_EDVAN.webp",
+                  "https://en-programmerare.github.io/warstar/media/STA_VANSTER_EDVAN.webp",
+                  "https://en-programmerare.github.io/warstar/media/pixil-frame-0%20(3).png",
+                  "https://en-programmerare.github.io/warstar/media/STA_HOGER_EDVAN.webp"
                   ]
           },
           ganggljud: [],
