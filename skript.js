@@ -127,7 +127,7 @@ document.getElementById("metall2")
 
 
 let saknas = new Image();
-saknas.src = "https://lh3.googleusercontent.com/Cw__t8VkDUzVl-Mf9AtLuUXLIASHRc2CwhwXFw8vnl4j0pW711ZqAnBk8fygblu9K-R7JX0DzBvMDymhXyWcJg=s400"; //Textur för saknat block
+saknas.src = "https://media.forgecdn.net/avatars/thumbnails/491/203/64/64/637799866799448709.png"; //Textur för saknat block
 
 let blocks = resurser.block;
 let entiteter = resurser.entiteter;

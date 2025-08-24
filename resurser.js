@@ -28,7 +28,7 @@ let resurser = {
     {
       id: 2,
       namn: "Horisontell vägg",
-      textur: "https://media.discordapp.net/attachments/818403607841996870/843760279636803594/Konstig_vagg_2.png",
+      textur: "media/Konstig_vagg_2.webp",
       vagg: true, //
       gangljud: [],
       interaktion: {
@@ -39,7 +39,7 @@ let resurser = {
     {
       id: 3,
       namn: "Vertikal vägg",
-      textur: "https://media.discordapp.net/attachments/818403607841996870/847217227367186432/unknown.png",
+      textur: "media/unknown.webp",
         //Gammal: https://media.discordapp.net/attachments/818403607841996870/843760279636803594/Konstig_vagg_2.png
         //https://media.discordapp.net/attachments/818403607841996870/843756398361444352/Konstig_vagg.png
       vagg: true,
@@ -52,7 +52,7 @@ let resurser = {
     {
       id: 4,
       namn: "Stängd horisontell dörr",
-      textur: "https://en-programmerare.github.io/warstar/media/Metalldorr_ratt_pixlar.png",
+      textur: "https://en-programmerare.github.io/warstar/media/Metalldorr_ratt_pixlar.webp",
       vagg: true,
       gangljud: [],
       interaktion: {
@@ -63,7 +63,7 @@ let resurser = {
     {
       id: 5,
       namn: "Öppen horisontell dörr",
-      textur: "https://en-programmerare.github.io/warstar/media/Metalldorr_oppen_ratt_pixlar.png",
+      textur: "https://en-programmerare.github.io/warstar/media/Metalldorr_oppen_ratt_pixlar.webp",
       vagg: false,
       gangljud: [],
       interaktion: {
@@ -96,7 +96,7 @@ let resurser = {
     {
       id: 8,
       namn: "Edvansoldat (för test)",
-      textur: "https://media.discordapp.net/attachments/783677919541198848/836216840639348826/unknown.png?width=478&height=450",
+      textur: "media/GA_FRAM_EDVAN.gif",
       vagg: false,
       gangljud: [],
       interaktion: {
@@ -107,7 +107,7 @@ let resurser = {
     {
       id: 9,
       namn: "Testgolv",
-      textur: "https://en-programmerare.github.io/warstar/media/Metallgolv_forslag.png",
+      textur: "https://en-programmerare.github.io/warstar/media/Metallgolv_forslag.webp",
       vagg: false,
       gangljud: [],
       interaktion: {
@@ -127,7 +127,7 @@ let resurser = {
           texturer: {
               rorelse: [
                  "https://en-programmerare.github.io/warstar/media/STA_STILL_FRAM_EDVAN.webp",
-                  "https://en-programmerare.github.io/warstar/media/STA_VANSTER_EDVAN.png",
+                  "https://en-programmerare.github.io/warstar/media/STA_VANSTER_EDVAN.webp",
                   "https://en-programmerare.github.io/warstar/media/pixil-frame-0%20(3).png",
                   "https://en-programmerare.github.io/warstar/media/STA_HOGER_EDVAN.webp"
                   ],
